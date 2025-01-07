@@ -2,6 +2,7 @@ import numpy as np
 import scipy.sparse as sparse
 from scipy.sparse import csr_matrix
 import time
+import matplotlib.pyplot as plt
 
 
 def generate_corrected_sparse_tridiagonal_matrix(n, diagonal_value=5, off_diagonal_value=1):
@@ -111,29 +112,29 @@ def jacobi_sparse(A, b, x0, tol=1e-7, max_iter=10000):
     x_new=x0.copy()
     D=A.diagonal()
     L_U=A-sparse.diags(D)
+    errors = []
     start_time=time.time()
     for k in range(max_iter):
         x_new=(b-L_U.dot(x))/D
-        error = np.linalg.norm(x_new-x)
+        error = np.linalg.norm(x-x_new)
+        errors.append(error)
         x = x_new
         if error < tol:
             break
     end_time = time.time()
+    print(errors)
     time_taken = end_time - start_time
-    return x_new, 1, time_taken
-
-
-
-
-n=100
-x0 = np.zeros(n)  ## initial guess
-A_sparse, A_dense_v1, b = generate_corrected_sparse_tridiagonal_matrix(n) 
-A_dense_v2 = A_sparse.toarray()  # Convert to dense format for comparison
+    return x_new, k+1, time_taken, errors
 
 
 
 
 
+
+
+
+
+"""
 # Classical Jacobi (dense)
 x_dense, iter_dense, time_dense = jacobi_dense(A_dense_v2, b, x0) 
 print(x_dense)
@@ -147,10 +148,38 @@ print(f"Iterations (sparse): {iter_sparse}, Time (sparse): {time_sparse:.4f} sec
 x_exact = np.linalg.solve(A_dense_v2, b)
 print(x_exact)
 print(x_sparse)
-
-# ### TODO: 
+#TEST#
 # # Implement a small for loop comparing the times required for both approaches as a function of the dimension n
 tab_val=[10,100,150,200,300,400,500]
 for i in range(0,len(tab_val)):
     
-print(generate_corrected_sparse_tridiagonal_matrix(3, diagonal_value=5, off_diagonal_value=1))
+    print(generate_corrected_sparse_tridiagonal_matrix(3, diagonal_value=5, off_diagonal_value=1))
+"""
+def plot_error(errors, iterations):
+  plt.figure(figsize=(8, 6))
+  plt.plot(range(iterations), errors, marker='o', linestyle='-')
+  plt.semilogy(range(iterations), errors, marker='o', linestyle='-')  # Use semilogy for log-scale on y-axis
+  plt.xlabel("Iterations")
+  plt.ylabel("Error estimate")
+  plt.title("Error vs Iterations (Jacobi Method)")
+  plt.grid(True)
+  plt.show()
+
+
+# Example usage:
+n=100
+x0 = np.random.rand(n)  ## initial guess
+A_sparse, A_dense_v1, b = generate_corrected_sparse_tridiagonal_matrix(n) 
+A_dense_v2 = A_sparse.toarray()  # Convert to dense format for comparison
+# Solve using Jacobi method
+x_jacobi, iterations, timing, errors = jacobi_sparse(A_sparse, b, x0)
+# Calculate exact solution
+x_exact = np.linalg.solve(A_dense_v1, b)
+
+# Print results
+print(f"Iterations: {iterations}")
+print(f"Solution Jacobi: {x_jacobi}")
+print(f"Exact solution: {x_exact}")
+
+# Plot the error
+plot_error(errors, iterations)
