@@ -70,9 +70,10 @@ def generate_sparse_tridiagonal_matrix(n):
 
     return A, b
 
+
 def jacobi_sparse_with_error(A, b, x0, x_exact, tol=eps, max_iter=iteration):
     """
-    Jacobi method for sparse matrices.
+    Jacobi method for sparse matrices with error calculation and debugging.
 
     Args:
         A: Sparse coefficient matrix (scipy.sparse.csr_matrix).
@@ -86,17 +87,22 @@ def jacobi_sparse_with_error(A, b, x0, x_exact, tol=eps, max_iter=iteration):
         x: Approximate solution vector.
         iterations: Number of iterations performed.
         time_taken: Time taken for the iterations.
+        errors: List of errors at each iteration.
     """
     n = A.shape[0]
     x = x0.copy()
     D = A.diagonal()
+    if np.any(D == 0):
+        raise ValueError("Matrix A has zero on the diagonal, Jacobi method cannot proceed.")
     L_U = A - sparse.diags(D)
     errors = []
     start_time = time.time()
     for k in range(max_iter):
-        x_new = (b-L_U.dot(x))/D
-        error = np.linalg.norm(x_new-x)
-        errors.append(np.linalg.norm(x_new-x_exact))
+        x_new = (b - L_U.dot(x)) / D
+        error = np.linalg.norm(x_new - x)
+        errors.append(np.linalg.norm(x_new - x_exact))
+        print(f"Iteration {k}: x_new = {x_new}, error = {error}")
+        print(f"D = {D}, L_U = {L_U.toarray()}, b = {b}, x = {x}")
         x = x_new
         if error < tol:
             break
@@ -126,7 +132,9 @@ def gauss_seidel_sparse_with_error(A, b, x0, x_exact, tol=eps, max_iter=iteratio
     x = x0.copy()
     D = A.diagonal()
     L = sparse.tril(A, -1)
+    L = L.tocsr()
     U = sparse.triu(A, 1)
+    U = L.tocsr()
     errors = []
     start_time = time.time()
     for k in range(max_iter):
@@ -142,7 +150,7 @@ def gauss_seidel_sparse_with_error(A, b, x0, x_exact, tol=eps, max_iter=iteratio
 
 # Parameters
 n = 100
-x0 = np.zeros(n)  # Initial guess
+x0 = np.random.rand(n) # Initial guess
 
 # Generate matrices and vectors
 A_sparse, b = generate_sparse_tridiagonal_matrix(n)
