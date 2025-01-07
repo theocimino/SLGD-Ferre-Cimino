@@ -29,7 +29,7 @@ def generate_corrected_sparse_tridiagonal_matrix(n, diagonal_value=5, off_diagon
     # Construct sparse matrix
     # Construction of data of non-zero scalars
     data = np.zeros(3 * n - 2)
-    data = np.concatenate(([5, 1], (n - 2) * [1, 5, 1], [1, 5]))
+    data = np.concatenate(([diagonal_value,off_diagonal_value], (n-2)*[off_diagonal_value , diagonal_value , off_diagonal_value], [off_diagonal_value, diagonal_value]))
     # Construction of rows and columns vector used to build the good-looking matrix (tri diagonal)
     rows = [0, 0]
     cols = np.arange(2)
