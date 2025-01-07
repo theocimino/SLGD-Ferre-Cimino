@@ -23,8 +23,10 @@ def generate_corrected_sparse_tridiagonal_matrix(n, diagonal_value=5, off_diagon
     main_diag = np.full(n, diagonal_value+off_diagonal_value)
 
     # Construct sparse matrix
+    # Construction of data of non-zero scalars
     data = np.zeros(3*n-2)
     data = np.concatenate(([5,1], (n-2)*[1 , 5 , 1], [1, 5]))
+    #Construction of rows and columns vector used to build the good-looking matrix(tri diagonal)
     rows = [0,0]
     cols = np.arange(2)
     for i in range(1,n-1):
@@ -32,17 +34,26 @@ def generate_corrected_sparse_tridiagonal_matrix(n, diagonal_value=5, off_diagon
         cols = np.concatenate((cols,np.arange(i-1,i+2)))
     cols = np.concatenate((cols, [n-2, n-1]))
     rows = np.concatenate((rows, [n-1 ,n-1 ]))
-   
-    # print(cols)
-    # print(rows)
+   #Creation of the sparse matrix with the scipy built-in function
     As = csr_matrix((data, (rows, cols)), shape=(n,n))
 
     # Construct dense matrix for reference
     A_dense = As.toarray()
-
+    #creation of an arbitrary b vector as the right-side of the equation
     b = np.zeros_like(x0)
     return As, A_dense, b
 
+#function used to calculate the next iteration x in the jacobi_dense function
+def x_next(A,b,x_old):
+  n = A.shape[0]
+  x_next = np.zeros_like(x_old)
+  for i in range(n):
+    sum = 0
+    for j in range(n):
+      if(j!=i):
+        sum += A[i][j] * x_old[j]
+    x_next[i] = 1/(A[i,i]) * (b[i]-sum)
+  return x_next
 
 
 def jacobi_dense(A, b, x0, tol=1e-6, max_iter=1000):
@@ -61,12 +72,22 @@ def jacobi_dense(A, b, x0, tol=1e-6, max_iter=1000):
         iterations: Number of iterations performed.
         time_taken: Time taken for the iterations.
     """
-    ### TODO: Code your thing here!
     start_time = time.time()
     x_new = x0.copy()
+    n = A.shape[0]
+    x = x0.copy()
+    errors = []
+    for k in range(max_iter):
+        x_new = x_next(A,b,x)
+        error = np.linalg.norm(x_new - x)
+        errors.append(error)
+        print(error)
+        x = x_new
+        if error < tol:
+            break
     end_time = time.time()
     time_taken = end_time - start_time
-    return x_new, 1, time_taken
+    return x, k+1, time_taken
 
 def jacobi_sparse(A, b, x0, tol=1e-7, max_iter=10000):
     """
@@ -116,4 +137,4 @@ def jacobi_sparse(A, b, x0, tol=1e-7, max_iter=10000):
 
 # ### TODO: 
 # # Implement a small for loop comparing the times required for both approaches as a function of the dimension n
-print(generate_corrected_sparse_tridiagonal_matrix(10, diagonal_value=5, off_diagonal_value=1))
+print(generate_corrected_sparse_tridiagonal_matrix(3, diagonal_value=5, off_diagonal_value=1))
