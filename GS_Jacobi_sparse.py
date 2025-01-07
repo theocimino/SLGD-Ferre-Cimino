@@ -144,11 +144,21 @@ def gauss_seidel_sparse_with_error(A, b, x0, x_exact, tol=eps, max_iter=iteratio
 
 
 
+def rayon_spectral(A):
+    B=A.toarray()
+    D=np.diag(np.diag(B))
+    L=np.tril(B,-1)
+    U=np.triu(B, 1)
+    T=np.linalg.inv(D).dot(L+U)
+    return np.linalg.norm(np.linalg.eigvals(T),np.inf)
+
+
+
 def test_rayon(A):
-    eigvalues, eigvectors = np.linalg.eig(A.todense())
+    eigvalues, eigvectors = np.linalg.eig(A.toarray())
     print(eigvalues)
     #print(a)
-    rayon=np.linalg.norm(np.linalg.eigvals(A.todense()), np.inf)
+    rayon=rayon_spectral(A)
     if rayon>1:
         return False, rayon
     return True, rayon
@@ -184,6 +194,8 @@ def sor_method(A, b, x0, x_exact, tol=eps, max_iter=iteration):
 
 
 
+
+
 # Parameters
 n = 10
 x0 = np.random.rand(n) # Initial guess
@@ -193,6 +205,7 @@ A_sparse, b = generate_sparse_tridiagonal_matrix(n,x0)
 x_exact = np.linalg.solve(A_sparse.toarray(), b)
 print(f"A_sparse {A_sparse.todense()}")
 verif_rayon, valeur_rayon=test_rayon(A_sparse)
+
 
 # Jacobi method
 x_jacobi, iter_jacobi, time_jacobi, errors_jacobi = jacobi_sparse_with_error(A_sparse, b, x0, x_exact)
