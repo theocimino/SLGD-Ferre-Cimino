@@ -2,8 +2,7 @@ import numpy as np
 import scipy.sparse as sparse
 from scipy.sparse import csr_matrix
 import time
-n = 10
-x0 = np.zeros(n)
+
 
 def generate_corrected_sparse_tridiagonal_matrix(n, diagonal_value=5, off_diagonal_value=1):
     """
@@ -89,6 +88,8 @@ def jacobi_dense(A, b, x0, tol=1e-6, max_iter=1000):
     time_taken = end_time - start_time
     return x, k+1, time_taken
 
+
+
 def jacobi_sparse(A, b, x0, tol=1e-7, max_iter=10000):
     """
     Jacobi method for sparse matrices.
@@ -105,36 +106,51 @@ def jacobi_sparse(A, b, x0, tol=1e-7, max_iter=10000):
         iterations: Number of iterations performed.
         time_taken: Time taken for the iterations.
     """
-    ### TODO: Adapt code here
-    x_new = x0.copy()
-    start_time = time.time()
+    n=A.shape[0]
+    x=x0.copy()
+    x_new=x0.copy()
+    D=A.diagonal()
+    L_U=A-sparse.diags(D)
+    start_time=time.time()
+    for k in range(max_iter):
+        x_new=(b-L_U.dot(x))/D
+        error = np.linalg.norm(x_new-x)
+        x = x_new
+        if error < tol:
+            break
     end_time = time.time()
     time_taken = end_time - start_time
     return x_new, 1, time_taken
 
-# # Example usage:
-# n=10000 
-# x0 = np.zeros(n)  ## initial guess
-# A_sparse, A_dense_v1, b = generate_corrected_sparse_tridiagonal_matrix(n) 
-# A_dense_v2 = A_sparse.toarray()  # Convert to dense format for comparison
+
+
+
+n=100
+x0 = np.zeros(n)  ## initial guess
+A_sparse, A_dense_v1, b = generate_corrected_sparse_tridiagonal_matrix(n) 
+A_dense_v2 = A_sparse.toarray()  # Convert to dense format for comparison
 
 
 
 
 
-# # Classical Jacobi (dense)
-# x_dense, iter_dense, time_dense = jacobi_dense(A_dense_v2, b, x0) 
+# Classical Jacobi (dense)
+x_dense, iter_dense, time_dense = jacobi_dense(A_dense_v2, b, x0) 
+print(x_dense)
+# Jacobi for sparse matrix
+x_sparse, iter_sparse, time_sparse = jacobi_sparse(A_sparse, b, x0)
 
-# # Jacobi for sparse matrix
-# x_sparse, iter_sparse, time_sparse = jacobi_sparse(A_sparse, b, x0)
 
-# print(f"Iterations (dense): {iter_dense}, Time (dense): {time_dense:.4f} seconds")
-# print(f"Iterations (sparse): {iter_sparse}, Time (sparse): {time_sparse:.4f} seconds")
+print(f"Iterations (dense): {iter_dense}, Time (dense): {time_dense:.4f} seconds")
+print(f"Iterations (sparse): {iter_sparse}, Time (sparse): {time_sparse:.4f} seconds")
 
-# #x_exact = np.linalg.solve(A_dense_v2, b)
-# #print(x_exact)
-# #print(x_sparse)
+x_exact = np.linalg.solve(A_dense_v2, b)
+print(x_exact)
+print(x_sparse)
 
 # ### TODO: 
 # # Implement a small for loop comparing the times required for both approaches as a function of the dimension n
+tab_val=[10,100,150,200,300,400,500]
+for i in range(0,len(tab_val)):
+    
 print(generate_corrected_sparse_tridiagonal_matrix(3, diagonal_value=5, off_diagonal_value=1))
