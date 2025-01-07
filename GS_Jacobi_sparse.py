@@ -6,10 +6,10 @@ import time
 
 # GLOBAL VARIABLES:
 eps = 1e-5
-iteration = 1000
+iteration = 10000
 
 # FUNCTIONS
-def generate_corrected_sparse_tridiagonal_matrix(n, diagonal_value=5, off_diagonal_value=1):
+def generate_corrected_sparse_tridiagonal_matrix(n, x0, diagonal_value=5, off_diagonal_value=1):
     """
     Generates a sparse tridiagonal matrix, ensuring no overlaps.
 
@@ -41,13 +41,11 @@ def generate_corrected_sparse_tridiagonal_matrix(n, diagonal_value=5, off_diagon
     # Creation of the sparse matrix with the scipy built-in function
     As = csr_matrix((data, (rows, cols)), shape=(n, n))
 
-    # Construct dense matrix for reference
-    A_dense = As.toarray()
     # Creation of an arbitrary b vector as the right-side of the equation
     b = np.zeros_like(x0)
     return As, b
 
-def generate_sparse_tridiagonal_matrix(n):
+def generate_sparse_tridiagonal_matrix(n,x0):
     """
     Generates a sparse tridiagonal matrix with the specific values.
 
@@ -60,8 +58,9 @@ def generate_sparse_tridiagonal_matrix(n):
     """
 
     h=1/(n+1)
-    h_off=1/(h**2)
-    return generate_corrected_sparse_tridiagonal_matrix(n,h,h_off)
+    print(h)
+    h_off=-1/(h**2)
+    return generate_corrected_sparse_tridiagonal_matrix(n,x0,2/(h**2),h_off)
 
 
 def jacobi_sparse_with_error(A, b, x0, x_exact, tol=eps, max_iter=iteration):
@@ -144,21 +143,35 @@ def gauss_seidel_sparse_with_error(A, b, x0, x_exact, tol=eps, max_iter=iteratio
     time_taken = end_time - start_time
     return x, k + 1, time_taken, errors
 
+
+
+def test_rayon(A):
+    eigvalues, eigvectors = np.linalg.eig(A.toarray())
+    print(eigvalues)
+    #print(a)
+    rayon=np.linalg.norm(np.linalg.eigvals(A.toarray()), np.inf)
+    if rayon>1:
+        return False, rayon
+    return True, rayon
+
+
 # Parameters
-n = 500
+n = 50
 x0 = np.random.rand(n) # Initial guess
 
 # Generate matrices and vectors
-A_sparse, b = generate_sparse_tridiagonal_matrix(n)
+A_sparse, b = generate_sparse_tridiagonal_matrix(n,x0)
 x_exact = np.linalg.solve(A_sparse.toarray(), b)
+#print(f"A_sparse {A_sparse.toarray()}")
+verif_rayon, valeur_rayon=test_rayon(A_sparse)
 
 # Jacobi method
 x_jacobi, iter_jacobi, time_jacobi, errors_jacobi = jacobi_sparse_with_error(A_sparse, b, x0, x_exact)
-print(f"errors_jacobi : {errors_jacobi} et x_jacobi : {x_jacobi}")
+#print(f"errors_jacobi : {errors_jacobi} et x_jacobi : {x_jacobi}")
 
 # Gauss-Seidel method
 x_gs, iter_gs, time_gs, errors_gs = gauss_seidel_sparse_with_error(A_sparse, b, x0, x_exact)
-print(f"errors_gs : {errors_gs} et x_gs : {x_gs}")
+#print(f"errors_gs : {errors_gs} et x_gs : {x_gs}")
 
 # Plotting the errors
 plt.plot(errors_jacobi, label='Jacobi')
@@ -171,3 +184,6 @@ plt.show()
 
 print(f"Jacobi method: Iterations = {iter_jacobi}, Time = {time_jacobi:.4f} seconds")
 print(f"Gauss-Seidel method: Iterations = {iter_gs}, Time = {time_gs:.4f} seconds")
+print(f"test de la condition sur le rayon spectrale : {verif_rayon} \n rayon spectrale : {valeur_rayon}")
+
+
