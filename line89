@@ -1,0 +1,30 @@
+    \subsection{Comparaison entre Jacobi_Sparse et Jacobi_Dense}
+    Que ce soit pour la matrice tridiagonale ou celle de poisson, toute deux contiennent un grand nombre de zéros à n élevé. Il est donc potentiellement intéressant de stocker ces matrices sous forme de matrices creuses (sparse). Comparons donc les temps de convergence de la méthode de Jacobi (cf numéro Jacobi!!) pour une matrice très grande (n~=10000) \newline
+    \par exemple pour n=10000 avec matrice tridiagonale
+    \par nombre d'itérations : 24
+    \par temps (dense) : 751.7574 secondes
+    \par temps (sparse): 0.0010 secondes\newline
+    
+
+    On observe une net différence entre la matrice sparse et dense pour la vitesse de calcul dans la méthode de Jacobi. Nous continuerons donc de travailler avec des matrices encryptées en format sparse afin d'améliorer le temps de convergence des différentes méthodes.
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique 5-1/Comparaison jacobi sparse et dense.PNG}
+	           \caption{Comparaison de jacobi sparse et  jacobi dense en fonction du temps et des itérations}
+	       \label{fig:image}
+	\end{figure}
+
+
+    \subsection{Comparaison CSR-CSC-COO}
+    La différence de temps d'éxécution entre les différents formats de stockage est présente mais minime, les temps de convergence suivent les mêmes tendances (cf Figure 2).
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique complex/Comparaison csr csc coo temps itération.png}
+	           \caption{Comparaison csr, csc, coo en fonction du temps et des itérations}
+	       \label{fig:image}
+	\end{figure}
+
+
+
