@@ -1069,7 +1069,7 @@ def test_methods_with_others_matrix(tab_valeurs):
 #test_jacobi_sparse_dense([i for i in range(2,1000,5)])
 
 #Comparaison sur la méthode de Jacobi des méthodes de stockage de la matrice A csr, csc et coo
-test_methods_csr_csc_coo([i for i in range(2,200,5)])
+#test_methods_csr_csc_coo([i for i in range(2,200,5)])
 
 #permet de comparer les différents modèles en nombre d'itération, en temps, en efficacité ainsi que leur rayon spectral
 #test_methods_errors([i for i in range(2,20,5)])
