@@ -1,0 +1,220 @@
+\section{Comparaison des Méthodes}
+    Nous comparons maintenant les performances des méthodes de Jacobi, Gauss-Seidel, SOR et SSOR pour des matrices tridiagonales et de Poisson. Pour chaque méthode, nous analysons le nombre d'itérations nécessaires pour atteindre une tolérance donnée et le temps de calcul.
+
+
+    
+    \subsection{Comparaison entre Jacobi_Sparse et Jacobi_Dense}
+    Pour n=10000
+    Iterations (dense): 21, Time (dense): 751.7574 seconds
+    Iterations (sparse): 24, Time (sparse): 0.0010 seconds
+
+    On observe une net différence entre la matrice sparse et dense pour la vitesse de calcul dans la méthode de Jacobi
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique 5-1/Comparaison jacobi sparse et dense.PNG}
+	           \caption{Comparaison de jacobi sparse et  jacobi dense en fonction du temps et des itérations}
+	       \label{fig:image}
+	\end{figure}
+
+
+    \subsection{Comparaison CSR-CSC-COO}
+    Différence de temps d'execution. Pour autant difficile de dégager une tendance parmi les exemples testés
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique complex/Comparaison csr csc coo temps itération.png}
+	           \caption{Comparaison csr, csc, coo en fonction du temps et des itérations}
+	       \label{fig:image}
+	\end{figure}
+
+
+
+
+    
+    \subsection{Matrices Tridiagonales}
+    Les matrices tridiagonales sont des matrices carrées où les éléments non nuls se trouvent sur la diagonale principale et les deux diagonales adjacentes. Un exemple de matrice tridiagonale est :
+    \[
+    A = \begin{bmatrix}
+    d_1 & c_1 & 0 & \dots & 0 \\
+    a_2 & d_2 & c_2 & \dots & 0 \\
+    0 & a_3 & d_3 & \dots & 0 \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    0 & 0 & 0 & \dots & d_n
+    \end{bmatrix}.
+    \]
+    Les performances des méthodes itératives dépendent fortement de la structure de cette matrice. En général, les méthodes Gauss-Seidel et SOR convergent plus rapidement que Jacobi pour les matrices tridiagonales.
+    
+    \subsection{Matrices de Poisson}
+    Les matrices de Poisson sont souvent utilisées dans la résolution de problèmes aux dérivées partielles, comme les équations de la chaleur et de la diffusion. Ces matrices sont de type tridiagonal par blocs, et leur résolution par méthodes itératives pose des défis supplémentaires. Les méthodes SOR et SSOR sont particulièrement efficaces pour les systèmes associés à des matrices de Poisson en raison de leur structure particulière.
+	
+
+	\subsection{Méthode Jacobi}
+	Ceci est une sous-section.
+    Jacobi est la méthode qui demande le plus d'itération mais qui pour autant est la plus rapide des méthodes,
+    à favoriser si on ne se préocupe pas de la mémoire sinon à éviter.
+
+    
+    par\leavevmode\par
+    Comme on peut le remarquer sur le graphique suivant :
+
+
+
+
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique 5-1/Rayon spectral jacobi.PNG}
+	           \caption{Rayon spectral pour la méthode de Jacobi}
+	       \label{fig:image}
+	\end{figure}
+
+    
+
+    \subsection{Méthode de Gauss-Seidel}
+	Ceci est une sous-section.
+    Demande en général environ 2 fois d'itérations pour finir mais est extrêment long par rapport aux autres méthodes
+    si l'on veut prioritiser le temps autant implémenter la méthode de Jacobi et sinon s'il est possible d'implémenter une autre méthode tel que sor et ssor alors Gauss-Seidel n'a aucun avantage.
+
+    \subsection{Sor}
+	Ceci est une sous-section.
+    Méthode très rapide en terme de temps et demande très peu d'itération pour une erreur convenable.
+
+    \subsection{Ssor}
+	Ceci est une sous-section.
+    Methode qui demande le moins itérations parmi toutes nos méthodes en terme de temps elle est juste derrière la méthode sor 
+
+    Dans l'idéal s'il est possible d'implémenter SSOR 
+
+    \section{Comparaison des Méthodes avec diffentes matrices}
+    \subsection{Comparaison methodes sur matrices tridiagonales h$=$$\frac{1}{n+1}$}
+	Ceci est une sous-section.
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique complex/comparaison-de-l_erreur-en-fonction-des-itérations-en-fonction-des-methodes.jpg}
+	           \caption{Comparaison de l'erreur en fonction de chaque méthode}
+	       \label{fig:image}
+	\end{figure}
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique complex/Temps-et-nombres-d_itérations-de-chaque-méthodes-en-fonction-de-la-dimension.jpg}
+	           \caption{Comparaison du temps et du nombres d'itérations de chaque méthode en fonction de la dimension}
+	       \label{fig:image}
+	\end{figure}
+
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique complex/rayon-de-convergence-en-fonction-de-chaque-methode-_matrice-tridiag_.jpg}
+	           \caption{Comparaison des rayons spectraux en fonctions de la dimension}
+	       \label{fig:image}
+	\end{figure}
+
+
+    \subsection{Comparaison méthodes sur matrices simple D=5 et LU=1}
+	Ceci est une sous-section.
+
+
+
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique 5-1/Comparaison de l'erreur en fonction des itérations.PNG}
+	           \caption{Comparaison de l'erreur en fonction des itérations}
+	       \label{fig:image}
+	\end{figure}
+
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique 5-1/Comparaison des methods en fonctions du temps et des itérations.PNG}
+	           \caption{Comparaison des methods en fonctions du temps et des itérations}
+	       \label{fig:image}
+	\end{figure}
+
+
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique 5-1/Rayon spectral en fonction de la méthode.PNG}
+	           \caption{Comparaison des methods en fonctions du temps et des itérations}
+	       \label{fig:image}
+	\end{figure}
+    
+
+    \subsection{Matrices de Poisson}
+	Ceci est une sous-section.
+    Le calcul pour la machine est beaucoup plus lourd que pour les matrices tester précedemment car la dimension vaut alors $n^{2}$
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique Poisson/Comparaison des erreurs en fonction des itérations.PNG}
+	           \caption{Comparaison des erreurs en fonction des itérations pour chaque méthode}
+	       \label{fig:image}
+	\end{figure}
+
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique Poisson/Comparaison temps itérations en fonctions de la dimension (à éleve au carré sur le graphique).PNG}
+	           \caption{Comparaison temps itérations en fonctions de la dimension (à élever au carré sur le graphique)}
+	       \label{fig:image}
+	\end{figure}
+
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique Poisson/Rayon spectral en fonction de la dimension.PNG}
+	           \caption{Comparaison temps itérations en fonctions de la dimension (à élever au carré sur le graphique)}
+	       \label{fig:image}
+	\end{figure}
+    
+    
+
+    \section{Rayon Spectral et Coefficient de Relaxation}
+    \subsection{Comparaison  du Rayon Spectral} %peut-être mettre cette sous-section et la suivant juste après ssor ou comparaison des méthodes
+	Ceci est une sous-section.
+    On remarque qu'ils convergent tous vers une valeur en fonction of la méthode et de la matrice considérée.
+
+
+
+    
+    \subsection{Recherche du meilleur coefficient de relaxation} %mais qu'est-ce que signifie le meilleur
+	Ceci est une sous-section.
+    w optimum different entre les 2 ?
+    pour certains omega sor est plus efficace que ssor
+    la methode pour trouver les w ne trouve pas toujours les mêmes coefficients de relaxation pour autant on observe la même tendance 
+    pour n qui augment autrement dit, pour n fixée le w trouver est approximativement le mêmes 
+
+
+    
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique 5-1/Coefficient de relaxation en fonction de la méthode_2.PNG}
+	           \caption{Coefficient de relaxation en fonction de la méthode}
+	       \label{fig:image1}
+	\end{figure}
+
+
+    \begin{figure}[h!]
+	   \centering
+	       \includegraphics[width=1.2\textwidth]{Graphique 5-1/Rayon spectral en fonction du coefficient de relaxation.PNG}
+	           \caption{Rayon spectral en fonction du coefficient de relaxation}
+	       \label{fig:image2}
+	\end{figure}
+
+
+	
+		
+	\section{Sources}
+    \par\leavevmode\par
+	\href{https://mathworld.wolfram.com/SuccessiveOverrelaxationMethod.html}{Black, Noel & Moore, Shirley. "Successive Overrelaxation Method". MathWorld.}.\par\leavevmode
+    \href{https://www.sciencedirect.com/science/article/pii/S0377042700004039}{A. Hadjidimos, Successive overrelaxation (SOR) and related methods, Journal of Computational and Applied Mathematics 123 (2000), 177–199.}.\par\leavevmode
+    \href{https://perso.eleves.ens-rennes.fr/people/pierre.le-barbenchon/TPanum/TP3correction.pdf}{Correction de TP d'informatique de l'Ens Rennes}.\par\leavevmode
+    \href{https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=dc368453ccc5f7fed3b0ad1d0f69df1d4bf7c8c3}{Pour la méthode Ssor : Howard C. Eldman : Iterative Methods for Linear System. Department of Computer Science, University of Maryland)}.\par\leavevmode\par
+    \href{https://cel.hal.science/cel-00092967/document}{Thierry Gallouët et Raphaèle Herbin : Université Aix Marseille, Licence de mathématiques, Cours d’Analyse numérique)}.\par\leavevmode\par
+
+    
+\end{document}
