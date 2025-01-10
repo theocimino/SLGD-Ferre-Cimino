@@ -1,0 +1,2 @@
+    Il est interessant de chercher quel est le omega optimal pour la matrice considérée en fonction de n c'est ce que nous avons chercher à faire dans un dernier point.
+    La methode pour trouver les w ne trouve pas toujours les mêmes coefficients de relaxation pour autant on observe la même tendance pour n qui augmente autrement dit, pour n fixée le w trouver est approximativement le même.
